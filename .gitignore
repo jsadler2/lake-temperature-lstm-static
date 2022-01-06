@@ -1,3 +1,26 @@
+# dotfiles
+.DS_Store
+.RData
+.Rhistory
+.snakemake
+
+# data and temporary files
+*.csv
+*.json
+*.nc
+*.rds
+*.feather
+*.fst
+*.html
+*.zip
+*.npy
+*.png
+*.xml
+*.shp
+*.dbf
+*.prj
+*.shx
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -5,6 +28,9 @@ __pycache__/
 
 # C extensions
 *.so
+
+# ctags
+tags
 
 # Distribution / packaging
 .Python
@@ -127,3 +153,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.Rproj.user
