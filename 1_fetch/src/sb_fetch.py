@@ -1,14 +1,17 @@
 import os
 import sys
+import argparse
+import logging
 from sciencebasepy import SbSession
 
 def sb_get(sb_session, item_id, sb_data_file=None, destination_dir='.'):
-    """Download an item from ScienceBase by ID
+    """
+    Download an item from ScienceBase by ID
 
     :param sb_session: Active SbSession
     :param item_id: ScienceBase ID of item to download
-    :param sb_data_file: requested filename. If None, download all files.
-    :param destination_dir: directory to save to
+    :param sb_data_file: Name of file to download. If None, download all files. (Default value = None)
+    :param destination_dir: directory to save to (Default value = '.')
     :returns: ScienceBase JSON response
 
     """
@@ -16,7 +19,7 @@ def sb_get(sb_session, item_id, sb_data_file=None, destination_dir='.'):
         raise ConnectionError('ScienceBase ping unsuccessful')
     # If data are public, no need to log in
     # if not sb_session.is_logged_in():
-        # sb_login(sb_session)
+        # sb_session.login()
 
     item_json = sb_session.get_item(item_id)
     if sb_data_file is None:
@@ -34,24 +37,55 @@ def sb_get(sb_session, item_id, sb_data_file=None, destination_dir='.'):
     return response
 
 
-def sb_login(sb_session):
-    """Login to ScienceBase
+def main(item_id, filename=None, destination_dir='.', log_file='1_fetch/log/fetch.log'):
+    """
+    Download a ScienceBase item
 
-    :param sb_session: current SBSession
+    :param item_id: ScienceBase ID of item to download
+    :param filename: Name of file to download. If None, download all files. (Default value = None)
+    :param destination_dir: directory to save to (Default value = '.')
+    :returns: ScienceBase JSON response
 
     """
-    sb_session.login()
-
-def main():
-    """Download a ScienceBase item"""
-    item_id = sys.argv[1]
-    destination_dir = sys.argv[2]
     if not os.path.exists(destination_dir):
         os.makedirs(destination_dir)
     sb = SbSession()
-    print(f'Getting {item_id}, to {destination_dir}')
-    response = sb_get(sb, item_id, None, destination_dir=destination_dir)
+    if filename is None:
+        item_str = item_id
+    else:
+        item_str = filename
+    print(f'Getting {item_str}, to {destination_dir}')
+    response = sb_get(sb, item_id, filename, destination_dir=destination_dir)
+    logging.basicConfig(
+        filename=log_file,
+        encoding='utf-8',
+        level=logging.DEBUG)
+    logging.info(response)
 
-if __name__ == "__main__":
-    main()
 
+def parse_args():
+    """Parse command line arguments"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'item_id', 
+        type=str,
+        help='ScienceBase item ID')
+    parser.add_argument(
+        '-f',
+        '--filename',
+        type=str,
+        help='Name of file to download from ScienceBase')
+    parser.add_argument(
+        '-d',
+        '--destination_dir',
+        type=str,
+        help='Directory to download to')
+    args = parser.parse_args()
+    arguments = (args.item_id,)
+    keyword_arguments = {k:v for k,v in vars(args).items() if ((v is not None) and (k!='item_id'))}
+    return (arguments, keyword_arguments)
+
+
+if __name__ == '__main__':
+    args, kwargs = parse_args()
+    main(*args, **kwargs)
