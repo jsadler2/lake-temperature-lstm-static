@@ -7,13 +7,18 @@ Predict lake temperatures at multiple depths using an LSTM trained to make use o
 Create a new `conda` environment by running
 
 ```
-conda env create -f environment.yml
+conda update -n base conda
+conda env create -f environment.yaml
 conda activate ltls
 ```
 
-Note: if `mamba` is available, the creation of the environment will be faster by running
+Note: if [Mamba](https://github.com/mamba-org/mamba) is available, the environment may be created significantly faster by running
 
-`mamba env create -f environment.yml`
+```
+mamba update -n base mamba
+mamba env create -f environment.yaml
+conda activate ltls
+```
 
 ## Downloading input data
 
