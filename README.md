@@ -1,6 +1,6 @@
 # lake-temperature-lstm-static
 
-Predict lake temperatures at depth using static lake attributes.
+Predict lake temperatures at multiple depths using an LSTM trained to make use of static lake attributes.
 
 ## Installing
 
@@ -23,10 +23,11 @@ To download temperature observations, meteorological drivers, and metadata, run
 
 `snakemake -c1 -p fetch_all`
 
-You can replace the `1` in `-c1` with the number of cores to use in a parallelized environment.
+Replace the `1` in `-c1` with the number of cores for use in a parallelized environment.
 
 The data will be downloaded to the `1_fetch/out` folder.
-If the download is interrupted, you can resume it and overwrite partially downloaded files by running
+If the download is interrupted, resume it and overwrite partially downloaded files by running
 
 `snakemake -c1 -p --rerun-incomplete fetch_all`
 
+To trigger a fresh download, change the date in 1_fetch/in/pull_date.txt to today's date and then call snakemake as above.
