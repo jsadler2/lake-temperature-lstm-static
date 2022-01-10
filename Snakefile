@@ -3,20 +3,13 @@ import os
 configfile: "1_fetch/fetch_config.yaml"
 
 
-def get_input_files(wildcards):
-    out_dir = "1_fetch/out"
-    categories = config["sb_fetch.py"].keys()
-    input_files = []
-    for category in categories:
-        for filename in config["sb_fetch.py"][category]["files"]:
-            input_files.append(os.path.join(out_dir, category, filename))
-    return input_files
-
 
 rule all:
     input:
         "1_fetch/in/pull_date.txt",
-        get_input_files,
+        expand("1_fetch/out/metadata/{file}", file=config["sb_fetch.py"]["metadata"]["files"]),
+        expand("1_fetch/out/obs/{file}", file=config["sb_fetch.py"]["obs"]["files"]),
+        expand("1_fetch/out/drivers/{file}", file=config["sb_fetch.py"]["drivers"]["files"]),
         expand("1_fetch/out/drivers/{driver_type}_{suffix}.zip",
                 driver_type=config["sb_fetch.py"]["drivers"]["driver_types"], 
                 suffix=config["sb_fetch.py"]["drivers"]["MNTOHA_suffixes"])
