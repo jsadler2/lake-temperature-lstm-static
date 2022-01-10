@@ -1,8 +1,6 @@
 # Download ScienceBase items by item id, and optionally by file name
 
 import os
-import sys
-import argparse
 from sciencebasepy import SbSession
 
 def sb_get(sb_session, item_id, sb_data_file=None, destination_dir='.'):
@@ -68,24 +66,5 @@ def main(item_id, filepath=None):
     response = sb_get(sb, item_id, filename, destination_dir=destination_dir)
 
 
-def parse_args():
-    """Parse command line arguments"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        'item_id', 
-        type=str,
-        help='ScienceBase item ID')
-    parser.add_argument(
-        '-f',
-        '--filepath',
-        type=str,
-        help='File to download from ScienceBase, and path to download to')
-    args = parser.parse_args()
-    arguments = (args.item_id,)
-    keyword_arguments = {k:v for k,v in vars(args).items() if ((v is not None) and (k!='item_id'))}
-    return (arguments, keyword_arguments)
-
-
 if __name__ == '__main__':
-    args, kwargs = parse_args()
-    main(*args, **kwargs)
+    main(snakemake.params['sb_id'], snakemake.output[0])

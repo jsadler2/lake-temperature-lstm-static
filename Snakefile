@@ -29,6 +29,6 @@ rule fetch_sb_data_file:
         "1_fetch/out/{file_category}/{file}"
     params:
         sb_id = lambda wildcards: config["sb_fetch.py"][wildcards.file_category]["sb_id"]
-    shell:
-        "python 1_fetch/src/sb_fetch.py {params.sb_id} -f {output}"
+    script:
+        "1_fetch/src/sb_fetch.py"
 
