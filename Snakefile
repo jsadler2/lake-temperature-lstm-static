@@ -1,37 +1,34 @@
+import os
+
 configfile: "1_fetch/fetch_config.yaml"
 
 
-rule fetch_all:
+def get_input_files(wildcards):
+    out_dir = "1_fetch/out"
+    categories = config["sb_fetch.py"].keys()
+    input_files = []
+    for category in categories:
+        for filename in config["sb_fetch.py"][category]["files"]:
+            input_files.append(os.path.join(out_dir, category, filename))
+    return input_files
+
+
+rule all:
     input:
         "1_fetch/in/pull_date.txt",
-        expand("{file}", file=config["sb_fetch.py"]["metadata_files"]),
-        expand("{file}", file=config["sb_fetch.py"]["obs_files"]),
-        expand("{file}", file=config["sb_fetch.py"]["driver_files"])
+        get_input_files,
+        expand("1_fetch/out/drivers/{driver_type}_{suffix}.zip",
+                driver_type=config["sb_fetch.py"]["drivers"]["driver_types"], 
+                suffix=config["sb_fetch.py"]["drivers"]["MNTOHA_suffixes"])
 
-# Lake information for 881 MNTOHA lakes
-rule fetch_metadata:
+
+rule fetch_sb_data_file:
     input:
         "1_fetch/in/pull_date.txt"
     output:
-        "1_fetch/out/metadata/{file}"
+        "1_fetch/out/{file_category}/{file}"
+    params:
+        sb_id = lambda wildcards: config["sb_fetch.py"][wildcards.file_category]["sb_id"]
     shell:
-        "python 1_fetch/src/sb_fetch.py {config[sb_fetch.py][metadata_id]} -f {output}"
-
-# Water temperature observations
-rule fetch_obs:
-    input:
-        "1_fetch/in/pull_date.txt"
-    output:
-        "1_fetch/out/obs/{file}"
-    shell:
-        "python 1_fetch/src/sb_fetch.py {config[sb_fetch.py][obs_id]} -f {output}"
-
-# Model inputs (meteorological inputs, clarity, and ice flags)
-rule fetch_driver:
-    input:
-        "1_fetch/in/pull_date.txt"
-    output:
-        "1_fetch/out/driver/{file}"
-    shell:
-        "python 1_fetch/src/sb_fetch.py {config[sb_fetch.py][driver_id]} -f {output}"
+        "python 1_fetch/src/sb_fetch.py {params.sb_id} -f {output}"
 
