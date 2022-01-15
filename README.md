@@ -28,7 +28,7 @@ To download temperature observations, meteorological drivers, and metadata, run
 
 `snakemake -c1 -p fetch_all`
 
-Replace the `1` in `-c1` with the number of cores for use in a parallelized environment.
+Replace the `1` in `-c1` with the number of cores to execute jobs in parallel.
 
 The data will be downloaded to the `1_fetch/out` folder.
 If the download is interrupted, resume it and overwrite partially downloaded files by running
