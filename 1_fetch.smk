@@ -25,7 +25,7 @@ def get_mntoha_input_files(wildcards):
     return input_files
 
 
-rule all:
+rule fetch_all:
     input:
         "1_fetch/in/pull_date.txt",
         get_mntoha_input_files
