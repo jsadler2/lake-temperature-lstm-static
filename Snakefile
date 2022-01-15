@@ -14,9 +14,14 @@ def get_mntoha_input_files(wildcards):
     out_dir = "1_fetch/out"
     categories = config["mntoha"].keys()
     input_files = []
+    # include files under files key in each category
     for category in categories:
         for filename in config["mntoha"][category]["files"]:
             input_files.append(os.path.join(out_dir, category + "_mntoha", filename))
+    # include driver files: 3 types x 13 suffixes = 39 files
+    for driver_type in config["mntoha"]["drivers"]["driver_types"]:
+        for suffix in config["mntoha"]["drivers"]["suffixes"]:
+            input_files.append(os.path.join(out_dir, "drivers_mntoha", f"{driver_type}_{suffix}.zip"))
     return input_files
 
 
@@ -24,9 +29,6 @@ rule all:
     input:
         "1_fetch/in/pull_date.txt",
         get_mntoha_input_files
-        expand("1_fetch/out/drivers_mntoha/{driver_type}_{suffix}.zip",
-                driver_type=config["sb_fetch.py"]["drivers"]["driver_types"], 
-                suffix=config["sb_fetch.py"]["drivers"]["MNTOHA_suffixes"])
 
 
 rule fetch_mntoha_data_file:
