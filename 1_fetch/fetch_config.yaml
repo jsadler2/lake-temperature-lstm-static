@@ -1,4 +1,4 @@
-sb_fetch.py:
+mntoha:
 
   metadata:
       sb_id: 5e5c1c1ce4b01d50924f27e7
@@ -20,7 +20,7 @@ sb_fetch.py:
           - ice_flags
           - inputs
 
-      MNTOHA_suffixes:
+      suffixes:
         - 01_N48.00-49.50_W89.50-97.25
         - 02_N47.00-48.00_W94.00-97.25
         - 03_N47.00-48.00_W93.00-94.00
