@@ -36,31 +36,21 @@ def sb_get(sb_session, item_id, sb_data_file=None, destination_dir='.'):
     return response
 
 
-def main(item_id, filepath=None):
+def main(item_id, filepath):
     """
     Download a ScienceBase item
 
     :param item_id: ScienceBase ID of item to download
     :param filepath: Name of file to download, and path to download to.
-        If None, download all files. (Default value = None)
     :returns: ScienceBase JSON response
 
     """
     # for a default None filepath, download all files in the item
-    if filepath is None:
-        filename = None
-        destination_dir='.'
-        item_str = item_id
-    else:
-        filename = os.path.basename(filepath)
-        destination_dir = os.path.dirname(filepath)
-        if not os.path.exists(destination_dir):
-            os.makedirs(destination_dir)
-        if filename == '':
-            filename = None
-            item_str = item_id
-        else:
-            item_str = filename
+    filename = os.path.basename(filepath)
+    destination_dir = os.path.dirname(filepath)
+    if not os.path.exists(destination_dir):
+        os.makedirs(destination_dir)
+    item_str = filename
     sb = SbSession()
     print(f'Downloading {item_str} to {destination_dir}')
     response = sb_get(sb, item_id, filename, destination_dir=destination_dir)
