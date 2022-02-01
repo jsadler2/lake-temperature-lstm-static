@@ -22,6 +22,9 @@
 *.shx
 *.patch
 
+# Specific files to include
+!/notebooks/Explore_MNTOHA_temperature_observations.html
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
